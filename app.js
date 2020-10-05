@@ -17,7 +17,7 @@ const Strategy = require("passport-local").Strategy;
 const checkIfExist = require('./js/checkIfExist')
 const checkIfLoggedIn = require('./js/checkIfLoggedIn')
 const createUser = require('./js/createUser')
-const findPole = require('./js/findPole')
+const findPole = require('./js/findPolePicture')
 
 // const passInfo = (req, res, next) => {
 //     res.db = db;
@@ -69,10 +69,10 @@ app.post('/login', passport.authenticate('local'), (req,res)=>{
     res.send({ loggedin: "false" });
 })
 
-app.post('/register', checkIfExist, createUser, (req,res)=>{
-    res.send(true)
-})
+app.post('/register', checkIfExist, createUser, (req,res)=>{})
 
-// app.get()
+// app.get('/inspection', checkIfLoggedIn, (req,res)=>{
+//     db.
+// })
 
 app.listen(port)

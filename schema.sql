@@ -12,9 +12,9 @@ create table inspections(
     name VARCHAR not Null
 )
 
-create table photos(
-    photo_id VARCHAR not NULL,
-    file_name VARCHAR not NULL,
-    record_id VARCHAR references inspections (id),
-    form_id VARCHAR not NULL
-)
+-- create table photos(
+--     photo_id VARCHAR not NULL,
+--     file_name VARCHAR not NULL,
+--     record_id VARCHAR references inspections (id),
+--     form_id VARCHAR references inspections (code)
+-- )
