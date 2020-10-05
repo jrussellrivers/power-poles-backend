@@ -1,0 +1,23 @@
+{
+  "name": "pole-start-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "db:install": "createdb powerpolesearch",
+    "db:destroy": "dropdb powerpolesearch",
+    "db:init": "psql powerpolesearch < schema.sql",
+    "db:reset": "npm run db:destroy; npm run db:install && npm run db:init"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "pg-promise": "^10.6.2"
+  }
+}
