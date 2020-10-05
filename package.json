@@ -4,10 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "db:install": "createdb powerpolesearch",
-    "db:destroy": "dropdb powerpolesearch",
-    "db:init": "psql powerpolesearch < schema.sql",
-    "db:reset": "npm run db:destroy; npm run db:install && npm run db:init"
+    "db:init": "psql photoapp < schema.sql"
   },
   "author": "",
   "license": "ISC",
