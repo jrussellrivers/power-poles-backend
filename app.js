@@ -1,5 +1,4 @@
 const express = require("express");
-// const bodyParser = require('body-parser');
 const cors = require("cors");
 const secretInfo = require("./config.js");
 const app = express();
@@ -16,28 +15,21 @@ const Strategy = require("passport-local").Strategy;
 
 const checkIfExist = require('./js/checkIfExist')
 const checkIfLoggedIn = require('./js/checkIfLoggedIn')
-const createUser = require('./js/createUser')
-const findPole = require('./js/findPolePicture')
 
-// const passInfo = (req, res, next) => {
-//     res.db = db;
-//     res.saltRounds = saltRounds;
-//     res.bcrypt = bcrypt;
-//     next();
-// };
+const User = require('./js/User')()
+const Inspections = require('./js/Inspections')()
+const Photos = require('./js/Photos')()
 
-// app.use(passInfo)
 app.use(expressSession);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-// app.use(bodyParser.json({ limit: "50mb" }))
-// app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }))
 
 passport.use(
     new Strategy((username, password, callback) => {
+        console.log(username, password)
         db.one(`SELECT * FROM users WHERE username='${username}'`)
         .then((u) => {
             bcrypt.compare(password, u.password).then((result) => {
@@ -63,16 +55,38 @@ passport.deserializeUser((id, callback) => {
 app.get(`/`, checkIfLoggedIn, async (req, res) => {});
 
 app.post('/login', passport.authenticate('local'), (req,res)=>{
+    console.log('logging in')
     if (req.user) {
         return res.send({ loggedin: "true", user: req.user });
     }
     res.send({ loggedin: "false" });
 })
 
-app.post('/register', checkIfExist, createUser, (req,res)=>{})
+app.post('/register', async (req,res)=>{
+    let status = await checkIfExist(db, req.body.username)
+    if (!status) await User.createUser(db, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+})
 
-// app.get('/inspection', checkIfLoggedIn, (req,res)=>{
-//     db.
-// })
+app.post('/user/edit/:id', checkIfLoggedIn, async (req,res)=>{
+    await User.editUser(db, req.params.id, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+})
+
+app.post('/inspection/create', checkIfLoggedIn, async (req,res)=>{
+    await Inspections.createInspection(db, req.body.id, req.body.code, req.body.name)
+})
+
+app.post('/inspection/edit/:id', checkIfLoggedIn, async (req,res)=>{
+    await Inspections.editInspection(db, req.params.id, req.body.id, req.body.code, req.body.name)
+})
+
+app.get('/grabAllPhotos', checkIfLoggedIn, async (req,res)=>{
+    let result = await Photos.grabAllPhotos(db, req.user.inspection_id)
+    res.send(result)
+})
+
+app.get('/grabSinglePhoto/:name', checkIfLoggedIn, async (req,res)=>{
+    let result = await Photos.grabSinglePhoto(db, req.params.name)
+    res.send(result)
+})
 
 app.listen(port)
