@@ -62,6 +62,10 @@ app.post('/login', passport.authenticate('local'), (req,res)=>{
     res.send({ loggedin: "false" });
 })
 
+app.get('/logout', (req,res)=>{
+    req.logout()
+})
+
 app.post('/register', async (req,res)=>{
     let status = await checkIfExist(db, req.body.username)
     if (!status) await User.createUser(db, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
