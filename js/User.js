@@ -14,6 +14,11 @@ const User = () => {
         );
     }
     
+    const grabUser = async (db, username) => {
+        let result = await db.oneOrNone(`SELECT * FROM users WHERE username='${username}'`)
+        return result
+    }
+
     const editUser = async (db, user_id, username, password, inspection_id, admin) => {
         let hash = await bcrypt.hash(password, saltRounds)
         const searchRegExp = /'/g;
@@ -24,6 +29,7 @@ const User = () => {
     
     return {
         createUser,
+        grabUser,
         editUser
     }
 }
