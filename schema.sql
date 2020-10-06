@@ -23,10 +23,6 @@ insert into inspections (id, code, name)
 values
     ('11027820-dc4a-4859-82a1-4bbb51e9af49','1f1b01eb-1c64-4591-a8ef-0751b688551c','Test Inspection');
 
-insert into users (username, password, inspection_id, admin)
-values
-    ('admin', '$2y$10$9dxTSDmNv77/meRRG1vp2.UWcOXeA9VjzmTTPvcmfBRAoc2Pg.F5C', '11027820-dc4a-4859-82a1-4bbb51e9af49', 'true');
-
 insert into s3_photos (photo_id, file_name, record_id, form_id)
 VALUES  
     ('27a34663-0d05-4bae-9266-c0ebd6b156b21','23816','11027820-dc4a-4859-82a1-4bbb51e9af49','1f1b01eb-1c64-4591-a8ef-0751b688551c'),
