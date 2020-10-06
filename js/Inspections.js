@@ -1,5 +1,9 @@
 const Inspections = () => {
 
+    const grabALLInspections = async (db) => {
+        return await db.one(`SELECT id FROM inspections`)
+    }
+
     const createInspection = async (db, id, code, name) => {
         return await db.none(`INSERT into inspections (id, code, name) VAUES ('${id})', '${code}','${name}'`)
     }
@@ -9,6 +13,7 @@ const Inspections = () => {
     }
     
     return {
+        grabALLInspections,
         createInspection,
         editInspection
     }
