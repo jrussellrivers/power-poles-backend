@@ -5,7 +5,7 @@ const Photos = () => {
     }
     
     const grabSinglePhoto = async (db, name) => {
-        return await db.one(`SELECT * FROM s3_photos WHERE file_name='${name}'`);
+        return await db.any(`SELECT * FROM s3_photos WHERE file_name='${name}'`);
     }
     
     return {

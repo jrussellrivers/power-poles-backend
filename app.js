@@ -71,6 +71,11 @@ app.post('/user/edit/:id', checkIfLoggedIn, async (req,res)=>{
     await User.editUser(db, req.params.id, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
 })
 
+app.get('/inspection/all', checkIfLoggedIn, async (req,res)=>{
+    let result = await Inspections.grabALLInspections(db)
+    res.send(result)
+})
+
 app.post('/inspection/create', checkIfLoggedIn, async (req,res)=>{
     await Inspections.createInspection(db, req.body.id, req.body.code, req.body.name)
 })
