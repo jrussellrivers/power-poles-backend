@@ -54,6 +54,7 @@ app.get(`/`, checkIfLoggedIn, async (req, res) => {});
 
 app.post('/login', passport.authenticate('local'), (req,res)=>{
     if (req.user) {
+        console.log(req.user)
         return res.send({ loggedin: "true", user: req.user });
     }
     res.send({ loggedin: "false" });
@@ -79,7 +80,12 @@ app.get('/user/username/:username', checkIfLoggedIn, async (req,res)=>{
 })
 
 app.post('/user/edit/:id', checkIfLoggedIn, async (req,res)=>{
-    await User.editUser(db, req.params.id, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+    if (req.body.password !== undefined){
+        await User.editUser(db, req.params.id, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+    } else {
+        await User.editUser(db, req.params.id, req.body.username, false, req.body.inspection_id, req.body.admin)
+
+    }
 })
 
 app.get('/inspection/all', checkIfLoggedIn, async (req,res)=>{

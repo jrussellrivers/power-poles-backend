@@ -30,11 +30,15 @@ const User = () => {
     }
 
     const editUser = async (db, user_id, username, password, inspection_id, admin) => {
-        let hash = await bcrypt.hash(password, saltRounds)
         const searchRegExp = /'/g;
         const replaceWith = "''";
         const result = username.replace(searchRegExp, replaceWith)
-        let insertion = await db.none(`UPDATE users SET username='${result}', password='${hash}', inspection_id='${inspection_id}', admin='${admin}' WHERE id=${user_id}`);
+        if (password === false){
+            await db.none(`UPDATE users SET username='${result}', inspection_id='${inspection_id}' WHERE id=${user_id}`);
+        } else {
+            let hash = await bcrypt.hash(password, saltRounds)
+            await db.none(`UPDATE users SET username='${result}', password='${hash}', inspection_id='${inspection_id}' WHERE id=${user_id}`);    
+        }
     };
     
     return {
