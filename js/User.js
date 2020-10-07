@@ -3,6 +3,16 @@ const saltRounds = 10;
 
 const User = () => {
 
+    const checkIfExist = async (db, username) => {
+        const searchRegExp = /'/g;
+        const replaceWith = "''";
+        const result = username.replace(searchRegExp, replaceWith)
+        let user_status = await db.oneOrNone(
+          `SELECT * FROM users WHERE username='${result}'`
+        );
+        return user_status
+    };
+
     const createUser = async (db, username, password, inspection_id, admin) => {
         let hash = await bcrypt.hash(password, saltRounds)
         const searchRegExp = /'/g;
@@ -28,6 +38,7 @@ const User = () => {
     };
     
     return {
+        checkIfExist,
         createUser,
         grabUser,
         editUser

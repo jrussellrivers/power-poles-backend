@@ -9,6 +9,13 @@ const Inspections = () => {
         return result
     }
 
+    const checkIfExist = async (db, id) => {
+        let inspection_status = await db.oneOrNone(
+          `SELECT * FROM inspections WHERE id='${id}'`
+        );
+        return inspection_status
+    };
+
     const createInspection = async (db, id, code, name) => {
         // check if exists
         return await db.none(`INSERT into inspections (id, code, name) VALUES ('${id}', '${code}','${name}')`)
@@ -21,6 +28,7 @@ const Inspections = () => {
     return {
         grabALLInspections,
         grabInspection,
+        checkIfExist,
         createInspection,
         editInspection
     }

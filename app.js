@@ -13,7 +13,6 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
 
-const checkIfExist = require('./js/checkIfExist')
 const checkIfLoggedIn = require('./js/checkIfLoggedIn')
 
 const User = require('./js/User')()
@@ -29,7 +28,6 @@ app.use(express.urlencoded({extended: true}))
 
 passport.use(
     new Strategy((username, password, callback) => {
-        console.log(username, password)
         db.one(`SELECT * FROM users WHERE username='${username}'`)
         .then((u) => {
             bcrypt.compare(password, u.password).then((result) => {
@@ -55,7 +53,6 @@ passport.deserializeUser((id, callback) => {
 app.get(`/`, checkIfLoggedIn, async (req, res) => {});
 
 app.post('/login', passport.authenticate('local'), (req,res)=>{
-    console.log('logging in')
     if (req.user) {
         return res.send({ loggedin: "true", user: req.user });
     }
@@ -67,13 +64,18 @@ app.get('/logout', (req,res)=>{
 })
 
 app.post('/register', async (req,res)=>{
-    let status = await checkIfExist(db, req.body.username)
-    if (!status) await User.createUser(db, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+    let status = await User.checkIfExist(db, req.body.username)
+    if (status === null) {
+        await User.createUser(db, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
+        res.send({status: true})
+    } else {
+        res.send({status: false})
+    }
 })
 
 app.get('/user/username/:username', checkIfLoggedIn, async (req,res)=>{
     let result = await User.grabUser(db, req.params.username)
-    result ? res.send(result) : res.send(false)
+    result !== null ? res.send({status: true, content: result}) : res.send({status: false})
 })
 
 app.post('/user/edit/:id', checkIfLoggedIn, async (req,res)=>{
@@ -87,12 +89,17 @@ app.get('/inspection/all', checkIfLoggedIn, async (req,res)=>{
 
 app.get('/inspection/one/:id', checkIfLoggedIn, async (req,res)=>{
     let result = await Inspections.grabInspection(db, req.params.id)
-    result ? res.send(result) : res.send(false)
+    result !== null ? res.send({status: true, content: result}) : res.send({status: false})
 })
 
 app.post('/inspection/create', checkIfLoggedIn, async (req,res)=>{
-    console.log(req.body)
-    await Inspections.createInspection(db, req.body.id, req.body.code, req.body.name)
+    let status = await Inspections.checkIfExist(db, req.body.id)
+    if (status === null) {
+        await Inspections.createInspection(db, req.body.id, req.body.code, req.body.name)        
+        res.send({status: true})
+    } else {
+        res.send({status: false})
+    }
 })
 
 app.post('/inspection/edit/:id', checkIfLoggedIn, async (req,res)=>{
