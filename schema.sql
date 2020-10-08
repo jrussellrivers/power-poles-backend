@@ -1,6 +1,6 @@
 create table inspections(
     id VARCHAR UNIQUE not NULL,
-    code VARCHAR UNIQUE not NULL,
+    code VARCHAR not NULL,
     name VARCHAR not Null
 );
 
@@ -16,7 +16,7 @@ create table s3_photos(
     photo_id VARCHAR not NULL,
     file_name VARCHAR not NULL,
     record_id VARCHAR references inspections (id),
-    form_id VARCHAR references inspections (code)
+    form_id VARCHAR 
 );
 
 insert into inspections (id, code, name)
