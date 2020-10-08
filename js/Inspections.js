@@ -22,7 +22,7 @@ const Inspections = () => {
     }
     
     const editInspection = async (db, prev_id, new_id, code, name) => {
-        return await db.none(`UPDATE inspections SET id='${new_id}', code='${code}', name='${name}' WHERE id=${prev_id}`);
+            await db.none(`UPDATE inspections SET id='${new_id}', code='${code}', name='${name}' WHERE id='${prev_id}'`);
     }
     
     return {

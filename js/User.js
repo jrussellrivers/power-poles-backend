@@ -35,9 +35,11 @@ const User = () => {
         const result = username.replace(searchRegExp, replaceWith)
         if (password === false){
             await db.none(`UPDATE users SET username='${result}', inspection_id='${inspection_id}' WHERE id=${user_id}`);
+            return true
         } else {
             let hash = await bcrypt.hash(password, saltRounds)
             await db.none(`UPDATE users SET username='${result}', password='${hash}', inspection_id='${inspection_id}' WHERE id=${user_id}`);    
+            return true
         }
     };
     
