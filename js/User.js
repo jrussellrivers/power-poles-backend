@@ -42,12 +42,18 @@ const User = () => {
             return true
         }
     };
+
+    const grabAllUsers = async (db) => {
+        let result = await db.any('SELECT * FROM users')
+        return result
+    }
     
     return {
         checkIfExist,
         createUser,
         grabUser,
-        editUser
+        editUser,
+        grabAllUsers
     }
 }
 
