@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const secretInfo = require("./config.js");
+const secretInfo = require("./config.js")();
 const app = express();
 const pgp = require("pg-promise")();
 const eS = require("express-session");
-const expressSession = eS(secretInfo().secret);
-const db = pgp(secretInfo().connect)
+const expressSession = eS(secretInfo.secret);
+const db = pgp(secretInfo.connect)
 const port = 7000
 
 //for passport encryption
@@ -84,6 +84,11 @@ app.get('/user/username/:username', checkIfLoggedIn, async (req,res)=>{
     result !== null ? res.send({status: true, content: result}) : res.send({status: false})
 })
 
+app.get('/user/all', checkIfLoggedIn, async (req,res)=>{
+    let result = await User.grabAllUsers(db)
+    res.send(result)
+})
+
 app.post('/user/edit/:id', checkIfLoggedIn, async (req,res)=>{
     if (req.body.password !== undefined){
         await User.editUser(db, req.params.id, req.body.username, req.body.password, req.body.inspection_id, req.body.admin)
@@ -111,6 +116,11 @@ app.post('/inspection/create', checkIfLoggedIn, async (req,res)=>{
         res.send({status: false})
     }
 })
+
+app.get('/bignumbas', async (req, res)=>{
+    let result = await db.any(`SELECT * FROM numbas`)
+    res.send(result)
+} )
 
 app.post('/inspection/edit/:id', checkIfLoggedIn, async (req,res)=>{
     await Inspections.editInspection(db, req.params.id, req.body.id, req.body.code, req.body.name)

@@ -1,7 +1,7 @@
 const Inspections = () => {
 
     const grabALLInspections = async (db) => {
-        return await db.one(`SELECT id FROM inspections`)
+        return await db.any(`SELECT * FROM inspections`)
     }
 
     const grabInspection = async (db, id) => {
