@@ -117,22 +117,12 @@ app.post('/inspection/create', checkIfLoggedIn, async (req,res)=>{
     }
 })
 
-app.get('/bignumbas', async (req, res)=>{
-    let result = await db.any(`SELECT * FROM numbas`)
-    res.send(result)
-} )
-
 app.post('/inspection/edit/:id', checkIfLoggedIn, async (req,res)=>{
     await Inspections.editInspection(db, req.params.id, req.body.id, req.body.code, req.body.name)
 })
 
-app.get('/grabAllPhotos', checkIfLoggedIn, async (req,res)=>{
-    let result = await Photos.grabAllPhotos(db, req.user.inspection_id)
-    res.send(result)
-})
-
-app.get('/grabSinglePhoto/:name', checkIfLoggedIn, async (req,res)=>{
-    let result = await Photos.grabSinglePhoto(db, req.params.name)
+app.get('/grabAllPhotos/:name', checkIfLoggedIn, async (req,res)=>{
+    let result = await Photos.grabAllPhotos(db, req.user.inspection_id, req.params.name)
     res.send(result)
 })
 
